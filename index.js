@@ -29,6 +29,8 @@ async function fetchCurrencyQuotes() {
                 coin: c.name,
                 bullishAverage: processHistoryForBullishAverage(c.history),
                 bearishAverage: processHistoryForBearishAverage(c.history),
+                bullishDays: getBullishDaysCount(c.history),
+                bearishDays: getBearishDaysCount(c.history),
                 volatilityAverage: calculateVolatilityAverage(c.history),
                 spreadAverage: calculateSpreadAverage(c.history),
                 periodHigh: processPeriodHigh(c.history),
@@ -72,6 +74,14 @@ function processPeriodHigh(history) {
 
 function processPeriodLow(history) {
     return formatCurrency(getMinLow(history));
+}
+
+function getBullishDaysCount(history) {
+    return filterBullishDays(history).length;
+}
+
+function getBearishDaysCount(history) {
+    return filterBearishDays(history).length;
 }
 
 function getDailyRange(history) {
