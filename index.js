@@ -1,9 +1,10 @@
 async function fetchCurrencyQuotes() {
-    const quoteRequests = [
-        fetch('https://economia.awesomeapi.com.br/json/daily/USD-BRL/20'),
-        fetch('https://economia.awesomeapi.com.br/json/daily/EUR-BRL/20'),
-        fetch('https://economia.awesomeapi.com.br/json/daily/BTC-BRL/20')
-    ];
+
+    const coins = ['USD', 'EUR', 'BTC'];
+
+    const quoteRequests = coins.map(c => {
+        return fetch(`https://economia.awesomeapi.com.br/json/daily/${c}-BRL/20`)
+    })
 
     try {
         const responses = await Promise.all(quoteRequests);
@@ -16,26 +17,58 @@ async function fetchCurrencyQuotes() {
 
         const rawData = await Promise.all(responses.map(response => response.json()));
 
-        const [usdHistory, eurHistory, btcHistory] = rawData;
+        const currencies = rawData.map((c, index) => {
+            return {
+                name: coins[index],
+                history: c
+            }
+        })
 
-        const usdAverageBullishPrice = processHistoryForBullishAverage(usdHistory);
-        const eurAverageBullishPrice = processHistoryForBullishAverage(eurHistory);
-        const btcAverageBullishPrice = processHistoryForBullishAverage(btcHistory);
+        const info = currencies.map(c => {
+            return {
+                coin: c.name,
+                bullishAverage: processHistoryForBullishAverage(c.history),
+                volatilityAverage: calculateVolatilityAverage(c.history)
+            }
+        })
 
-        console.log('Average Closing Price - Bullish Trend (Last 20 Days)');
-        console.log(`Bullish Average (USD/BRL): ${formatCurrency(usdAverageBullishPrice)}`);
-        console.log(`Bullish Average (EUR/BRL): ${formatCurrency(eurAverageBullishPrice)}`);
-        console.log(`Bullish Average (BTC/BRL): ${formatCurrency(btcAverageBullishPrice)}`);
-
+        console.table(info);
     } catch (error) {
         console.error(`Error in one of the requests: ${error.message}`);
     }
 }
 
+function getDailyPercentage(history) {
+    return history.map(q => {
+        return {
+            percentage: Math.abs(parseFloat(q.pctChange))
+        }
+    });
+}
+
+function percentageSum(historyPercentage) {
+    return historyPercentage.reduce((acc, p) => {
+        return acc + p.percentage;
+    }, 0.0)
+}
+
+function volatilityAverage(percentageSum, history) {
+    if (history.length === 0) {
+        return 0;
+    }
+    return percentageSum / history.length;
+}
+
+function calculateVolatilityAverage(history) {
+    const DailyPercentage = getDailyPercentage(history);
+    const totalSum = percentageSum(DailyPercentage);
+    return formatPercentage(volatilityAverage(totalSum, history));
+}
+
 function processHistoryForBullishAverage(history) {
     const bullishHistory = filterBullishDays(history);
     const sanitizedHistory = sanitizeClosingPrices(bullishHistory);
-    return calculateAverage(sanitizedHistory);
+    return formatCurrency(calculateAverage(sanitizedHistory));
 }
 
 function filterBullishDays(quotes) {
@@ -64,6 +97,10 @@ function calculateAverage(items) {
 
 function formatCurrency(value) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+}
+
+function formatPercentage(value) {
+    return new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value / 100);
 }
 
 fetchCurrencyQuotes();
