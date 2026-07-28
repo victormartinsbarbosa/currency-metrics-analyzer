@@ -5,7 +5,7 @@ A clean, modular Node.js utility designed to fetch parallel historical currency 
 ## 🚀 Key Features
 
 - **Concurrent Async Requests:** Fetches multiple endpoints in parallel using `Promise.all`.
-- **Bullish Trend Analysis:** Computes average closing prices specifically on positive performance days (`pctChange > 0`).
+- **Trend Analysis (Bullish & Bearish):** Computes average closing prices separately for positive (`pctChange > 0`) and negative (`pctChange < 0`) performance days.
 - **Volatility Metrics:** Measures average daily percentage fluctuation using absolute variation.
 - **Spread & Intra-Day Range:** Calculates average percentage spread between daily highs and lows.
 - **Period Extremes:** Extracts absolute highest (`periodHigh`) and lowest (`periodLow`) prices across the period without initial-value pitfalls.
@@ -35,7 +35,7 @@ Um script em Node.js limpo e modular projetado para consultar históricos de cot
 ## 🚀 Principais Funcionalidades
 
 - **Requisições Assíncronas Concorrentes:** Busca múltiplos endpoints em paralelo utilizando `Promise.all`.
-- **Análise de Tendência de Alta:** Calcula a média dos preços de fechamento em dias de variação positiva (`pctChange > 0`).
+- **Análise de Tendência (Alta e Baixa):** Calcula a média dos preços de fechamento separadamente para dias de alta (`pctChange > 0`) e dias de queda (`pctChange < 0`).
 - **Métricas de Volatilidade:** Mede a oscilação percentual média diária utilizando a variação absoluta.
 - **Spread & Amplitude Diária:** Calcula o spread percentual médio entre a máxima e a mínima de cada dia.
 - **Extremos do Período:** Extrai a máxima absoluta (`periodHigh`) e a mínima absoluta (`periodLow`) do período sem problemas de inicialização de tipo.
