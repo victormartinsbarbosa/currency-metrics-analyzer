@@ -29,7 +29,9 @@ async function fetchCurrencyQuotes() {
                 coin: c.name,
                 bullishAverage: processHistoryForBullishAverage(c.history),
                 volatilityAverage: calculateVolatilityAverage(c.history),
-                spreadAverage: calculateSpreadAverage(c.history)
+                spreadAverage: calculateSpreadAverage(c.history),
+                periodHigh: processPeriodHigh(c.history),
+                periodLow: processPeriodLow(c.history)
             }
         })
 
@@ -55,6 +57,14 @@ function processHistoryForBullishAverage(history) {
     const bullishHistory = filterBullishDays(history);
     const sanitizedHistory = sanitizeClosingPrices(bullishHistory);
     return formatCurrency(calculateAverage(sanitizedHistory));
+}
+
+function processPeriodHigh(history) {
+    return formatCurrency(getMaxHigh(history));
+}
+
+function processPeriodLow(history) {
+    return formatCurrency(getMinLow(history));
 }
 
 function getDailyRange(history) {
@@ -107,6 +117,28 @@ function average(sum, history) {
         return 0;
     }
     return sum / history.length;
+}
+
+function getMaxHigh(history) {
+
+    if (history.length === 0) {
+        return 0;
+    }
+
+    return history.reduce((acc, q) => {
+        return Math.max(acc, parseFloat(q.high));
+    }, parseFloat(history[0].high))
+}
+
+function getMinLow(history) {
+
+    if (history.length === 0) {
+        return 0;
+    }
+
+    return history.reduce((acc, q) => {
+        return Math.min(acc, parseFloat(q.low));
+    }, parseFloat(history[0].low))
 }
 
 function formatCurrency(value) {
