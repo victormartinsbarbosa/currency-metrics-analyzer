@@ -28,6 +28,7 @@ async function fetchCurrencyQuotes() {
             return {
                 coin: c.name,
                 bullishAverage: processHistoryForBullishAverage(c.history),
+                bearishAverage: processHistoryForBearishAverage(c.history),
                 volatilityAverage: calculateVolatilityAverage(c.history),
                 spreadAverage: calculateSpreadAverage(c.history),
                 periodHigh: processPeriodHigh(c.history),
@@ -59,6 +60,12 @@ function processHistoryForBullishAverage(history) {
     return formatCurrency(calculateAverage(sanitizedHistory));
 }
 
+function processHistoryForBearishAverage(history) {
+    const bearishHistory = filterBearishDays(history);
+    const sanitizedHistory = sanitizeClosingPrices(bearishHistory);
+    return formatCurrency(calculateAverage(sanitizedHistory));
+}
+
 function processPeriodHigh(history) {
     return formatCurrency(getMaxHigh(history));
 }
@@ -84,6 +91,10 @@ function getDailyPercentage(history) {
 
 function filterBullishDays(quotes) {
     return quotes.filter(quote => parseFloat(quote.pctChange) > 0);
+}
+
+function filterBearishDays(quotes) {
+    return quotes.filter(quote => parseFloat(quote.pctChange) < 0)
 }
 
 function sanitizeClosingPrices(quotes) {
