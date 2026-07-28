@@ -31,6 +31,7 @@ async function fetchCurrencyQuotes() {
                 bearishAverage: processHistoryForBearishAverage(c.history),
                 bullishDays: getBullishDaysCount(c.history),
                 bearishDays: getBearishDaysCount(c.history),
+                bullishRatio: calculateBullishRatio(c.history),
                 volatilityAverage: calculateVolatilityAverage(c.history),
                 spreadAverage: calculateSpreadAverage(c.history),
                 periodHigh: processPeriodHigh(c.history),
@@ -54,6 +55,14 @@ function calculateVolatilityAverage(history) {
     const dailyPercentage = getDailyPercentage(history);
     const totalSum = sumArray(dailyPercentage);
     return formatPercentage(average(totalSum, history));
+}
+
+function calculateBullishRatio(history) {
+    if (!history || history.length === 0) return 'N/A';
+    const bullishDays = getBullishDaysCount(history);
+    const periodDays = history.length;
+    const ratioPercentage = (bullishDays / periodDays) * 100;
+    return formatPercentage(ratioPercentage);
 }
 
 function processHistoryForBullishAverage(history) {
