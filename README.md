@@ -1,14 +1,17 @@
-# 🇺🇸​ 📈 Currency Bullish Trend Analyzer
+# 🇺🇸 📈 Currency Metrics Analyzer
 
-A lightweight Node.js script designed to fetch parallel currency exchange rate histories (USD/BRL, EUR/BRL, BTC/BRL) and compute average closing prices specifically on bullish (positive percentage change) days.
+A clean, modular Node.js utility designed to fetch parallel historical currency exchange rates (USD/BRL, EUR/BRL, BTC/BRL) and calculate core market metrics using functional data pipelines.
 
 ## 🚀 Key Features
 
 - **Concurrent Async Requests:** Fetches multiple endpoints in parallel using `Promise.all`.
-- **Resilient Error Handling:** Validates HTTP response status before JSON parsing.
-- **Pure Functional Pipeline:** Isolates data filtering, mapping, and reduction into single-responsibility functions.
-- **Edge-Case Safe:** Prevents division-by-zero (`0/0`) errors when no bullish days exist in the period.
-- **Native Localization:** Formats financial outputs with `Intl.NumberFormat`.
+- **Bullish Trend Analysis:** Computes average closing prices specifically on positive performance days (`pctChange > 0`).
+- **Volatility Metrics:** Measures average daily percentage fluctuation using absolute variation.
+- **Spread & Intra-Day Range:** Calculates average percentage spread between daily highs and lows.
+- **Period Extremes:** Extracts absolute highest (`periodHigh`) and lowest (`periodLow`) prices across the period without initial-value pitfalls.
+- **Pure Functional Pipelines:** Isolated helper functions for mapping, filtering, reducing, and sanitizing data (SRP).
+- **Edge-Case Resilience:** Prevents `NaN` and division-by-zero (`0/0`) errors across empty arrays or extreme values.
+- **Native Localization:** Formats outputs into BRL (`R$`) and percentages (`%`) using `Intl.NumberFormat`.
 
 ## 🛠️ Tech Stack
 
@@ -22,17 +25,23 @@ A lightweight Node.js script designed to fetch parallel currency exchange rate h
 node index.js
 ```
 ---
-# 🇧🇷 📈 Analisador de Tendência de Alta de Moedas
 
-Um script em Node.js projetado para consultar históricos de cotações em paralelo (USD/BRL, EUR/BRL, BTC/BRL) e calcular a média dos preços de fechamento especificamente nos dias com tendência de alta (variação percentual positiva).
+
+
+# 📈 Analisador de Métricas do Mercado de Moedas
+
+Um script em Node.js limpo e modular projetado para consultar históricos de cotações em paralelo (USD/BRL, EUR/BRL, BTC/BRL) e calcular métricas essenciais do mercado utilizando pipelines funcionais.
 
 ## 🚀 Principais Funcionalidades
 
 - **Requisições Assíncronas Concorrentes:** Busca múltiplos endpoints em paralelo utilizando `Promise.all`.
-- **Tratamento de Erros Resiliente:** Valida o status da resposta HTTP antes de realizar o parse para JSON.
-- **Pipeline Funcional Puro:** Isola o filtro, o mapeamento e a redução de dados em funções com responsabilidade única (SRP).
-- **Tratamento de Edge Cases:** Previne erros de divisão por zero (`0/0`) caso não existam dias de alta no período consultado.
-- **Formatação Nativa:** Formata os valores monetários utilizando `Intl.NumberFormat` para a moeda BRL.
+- **Análise de Tendência de Alta:** Calcula a média dos preços de fechamento em dias de variação positiva (`pctChange > 0`).
+- **Métricas de Volatilidade:** Mede a oscilação percentual média diária utilizando a variação absoluta.
+- **Spread & Amplitude Diária:** Calcula o spread percentual médio entre a máxima e a mínima de cada dia.
+- **Extremos do Período:** Extrai a máxima absoluta (`periodHigh`) e a mínima absoluta (`periodLow`) do período sem problemas de inicialização de tipo.
+- **Pipelines Funcionais Puros:** Funções utilitárias isoladas para mapeamento, filtragem, redução e higienização de dados (Princípio da Responsabilidade Única).
+- **Resiliência a Edge Cases:** Previne erros de `NaN` e divisão por zero (`0/0`) em arrays vazios ou conjuntos de dados atípicos.
+- **Formatação Nativa:** Exibe relatórios formatados em moeda nacional (`R$`) e porcentagem (`%`) via `Intl.NumberFormat`.
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -44,3 +53,4 @@ Um script em Node.js projetado para consultar históricos de cotações em paral
 
 ```bash
 node index.js
+```
