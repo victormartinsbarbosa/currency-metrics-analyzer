@@ -12,6 +12,7 @@ A clean, modular Node.js utility designed to fetch parallel historical currency 
 - **Pure Functional Pipelines:** Isolated helper functions for mapping, filtering, reducing, and sanitizing data (SRP).
 - **Edge-Case Resilience:** Prevents `NaN` and division-by-zero (`0/0`) errors across empty arrays or extreme values.
 - **Native Localization:** Formats outputs into BRL (`R$`) and percentages (`%`) using `Intl.NumberFormat`.
+- **Dominance:** Calculates overall bullish ratio (`bullishRatio`) across the period.
 
 ## 🛠️ Tech Stack
 
@@ -42,6 +43,7 @@ Um script em Node.js limpo e modular projetado para consultar históricos de cot
 - **Pipelines Funcionais Puros:** Funções utilitárias isoladas para mapeamento, filtragem, redução e higienização de dados (Princípio da Responsabilidade Única).
 - **Resiliência a Edge Cases:** Previne erros de `NaN` e divisão por zero (`0/0`) em arrays vazios ou conjuntos de dados atípicos.
 - **Formatação Nativa:** Exibe relatórios formatados em moeda nacional (`R$`) e porcentagem (`%`) via `Intl.NumberFormat`.
+- **Métricas de Dominância:** Calcula a taxa de dominância altista (`bullishRatio`) do período.
 
 ## 🛠️ Tecnologias Utilizadas
 
