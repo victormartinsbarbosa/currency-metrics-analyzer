@@ -1,88 +1,58 @@
-async function fetchCurrencyQuotes() {
-
-    const coins = ['USD', 'EUR', 'BTC'];
-
-    const quoteRequests = coins.map(c => {
-        return fetch(`https://economia.awesomeapi.com.br/json/daily/${c}-BRL/20`)
-    })
-
-    try {
-        const responses = await Promise.all(quoteRequests);
-
-        responses.forEach(response => {
-            if (!response.ok) {
-                throw new Error(`Request failed: ${response.url}`);
-            }
-        });
-
-        const rawData = await Promise.all(responses.map(response => response.json()));
-
-        const currencies = rawData.map((c, index) => {
-            return {
-                name: coins[index],
-                history: c
-            }
-        })
-
-        const info = currencies.map(c => {
-            return {
-                coin: c.name,
-                bullishAverage: processHistoryForBullishAverage(c.history),
-                bearishAverage: processHistoryForBearishAverage(c.history),
-                bullishDays: getBullishDaysCount(c.history),
-                bearishDays: getBearishDaysCount(c.history),
-                bullishRatio: calculateBullishRatio(c.history),
-                volatilityAverage: calculateVolatilityAverage(c.history),
-                spreadAverage: calculateSpreadAverage(c.history),
-                periodHigh: processPeriodHigh(c.history),
-                periodLow: processPeriodLow(c.history)
-            }
-        })
-
-        console.table(info);
-    } catch (error) {
-        console.error(`Error in one of the requests: ${error.message}`);
-    }
+export function processCurrencyMetrics(currencies) {
+    return currencies.map(c => {
+        return {
+            coin: c.name,
+            bullishAverage: processHistoryForBullishAverage(c.history),
+            bearishAverage: processHistoryForBearishAverage(c.history),
+            bullishDays: getBullishDaysCount(c.history),
+            bearishDays: getBearishDaysCount(c.history),
+            bullishRatio: calculateBullishRatio(c.history),
+            volatilityAverage: calculateVolatilityAverage(c.history),
+            spreadAverage: calculateSpreadAverage(c.history),
+            periodHigh: processPeriodHigh(c.history),
+            periodLow: processPeriodLow(c.history)
+        }
+    });
 }
 
 function calculateSpreadAverage(history) {
     const dailyRange = getDailyRange(history);
     const sum = sumArray(dailyRange);
-    return formatPercentage(average(sum, history));
+    return average(sum, history);
 }
 
 function calculateVolatilityAverage(history) {
     const dailyPercentage = getDailyPercentage(history);
     const totalSum = sumArray(dailyPercentage);
-    return formatPercentage(average(totalSum, history));
+    return average(totalSum, history);
 }
 
 function calculateBullishRatio(history) {
-    if (!history || history.length === 0) return 'N/A';
+    if (!history || history.length === 0) return null;
     const bullishDays = getBullishDaysCount(history);
     const periodDays = history.length;
     const ratioPercentage = (bullishDays / periodDays) * 100;
-    return formatPercentage(ratioPercentage);
+    return ratioPercentage;
 }
 
 function processHistoryForBullishAverage(history) {
     const bullishHistory = filterBullishDays(history);
     const sanitizedHistory = sanitizeClosingPrices(bullishHistory);
-    return formatCurrency(calculateAverage(sanitizedHistory));
+    return calculateAverage(sanitizedHistory);
 }
 
 function processHistoryForBearishAverage(history) {
     const bearishHistory = filterBearishDays(history);
     const sanitizedHistory = sanitizeClosingPrices(bearishHistory);
-    return formatCurrency(calculateAverage(sanitizedHistory));
+    return calculateAverage(sanitizedHistory);
 }
 
 function processPeriodHigh(history) {
-    return formatCurrency(getMaxHigh(history));
+    return getMaxHigh(history);
 }
 
 function processPeriodLow(history) {
-    return formatCurrency(getMinLow(history));
+    return getMinLow(history);
 }
 
 function getBullishDaysCount(history) {
@@ -130,7 +100,7 @@ function calculateAverage(items) {
     }, 0);
 
     if (totalSum === 0 || items.length === 0) {
-        return 'N/A';
+        return null;
     }
 
     return totalSum / items.length;
@@ -170,19 +140,3 @@ function getMinLow(history) {
         return Math.min(acc, parseFloat(q.low));
     }, parseFloat(history[0].low))
 }
-
-function formatCurrency(value) {
-    if (value === 'N/A') {
-        return value;
-    }
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-}
-
-function formatPercentage(value) {
-    if (value === 'N/A') {
-        return value;
-    }
-    return new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value / 100);
-}
-
-fetchCurrencyQuotes();
