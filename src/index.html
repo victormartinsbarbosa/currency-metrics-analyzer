@@ -2,14 +2,31 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>Coins Metrics</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="/src/app.js" type="module"></script>
+  <title>Coins Metrics</title>
+  <style type="text/tailwindcss">
+    @theme {
+        --color-clifford: #da373d;
+    }
+  </style>
 </head>
 
 <body>
+  <main class="max-w-7xl mx-auto space-y-8">
+    <header class="border-b border-slate-800 pb-6">
+      <h1 class="text-3xl font-bold tracking-tight text-white">Dashboard de Cotações</h1>
+      <p class="text-slate-400 text-sm mt-1">Acompanhamento em tempo real e métricas de moedas.</p>
+    </header>
+    <section>
+      <h2 class="text-xl font-semibold mb-4 text-slate-200">Visão Geral das Moedas</h2>
+      <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
+      </div>
+    </section>
+  </main>
 </body>
 
 </html>

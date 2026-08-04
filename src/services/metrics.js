@@ -2,6 +2,7 @@ export function processCurrencyMetrics(currencies) {
     return currencies.map(c => {
         return {
             coin: c.name,
+            name: getExtensiveName(c.history),
             bullishAverage: processHistoryForBullishAverage(c.history),
             bearishAverage: processHistoryForBearishAverage(c.history),
             bullishDays: getBullishDaysCount(c.history),
@@ -139,4 +140,8 @@ function getMinLow(history) {
     return history.reduce((acc, q) => {
         return Math.min(acc, parseFloat(q.low));
     }, parseFloat(history[0].low))
+}
+
+function getExtensiveName(history) {
+    return history[0].name.split('/')[0].trim();
 }

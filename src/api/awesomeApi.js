@@ -16,12 +16,17 @@ export async function getCurrencyHistory(coins = ['USD', 'EUR', 'BTC'], days = 2
 
         const rawData = await Promise.all(res.map(res => res.json()));
 
+        console.log(rawData);
+
         const currencies = rawData.map((c, index) => {
             return {
                 name: coins[index],
+                nameExtensive: c.name,
                 history: c
             }
         });
+
+        console.log(currencies)
 
         const currencyCache = {
             updatedAt: new Date().toISOString(),
